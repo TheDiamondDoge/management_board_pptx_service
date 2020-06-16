@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -25,6 +26,7 @@ public class PptCreatorService {
     private final String FILE_POSTFIX = ".pptx";
 
     public ByteArrayResource createMultipageCustomizablePpt(PptConfigurationData data) throws IOException {
+        createDirIfNotExist(TMP_PATH);
         Options options = getOptionsFromPptConfData(data);
         PptCreatorFacade facade = new PptCreatorFacade();
 
@@ -37,6 +39,7 @@ public class PptCreatorService {
     }
 
     public ByteArrayResource createMultipageIndicatorsPpt(PptConfigurationData data) throws IOException {
+        createDirIfNotExist(TMP_PATH);
         Options options = getOptionsFromPptConfData(data);
         PptCreatorFacade facade = new PptCreatorFacade();
 
@@ -49,6 +52,7 @@ public class PptCreatorService {
     }
 
     public ByteArrayResource createReviewPpt(PptConfigurationData data) throws IOException {
+        createDirIfNotExist(TMP_PATH);
         Options options = getOptionsFromPptConfData(data);
         PptCreatorFacade facade = new PptCreatorFacade();
 
@@ -122,5 +126,14 @@ public class PptCreatorService {
         List<HtmlSection> otherInformationSection = new ArrayList<>();
         otherInformationSection.add(new HtmlSection("Current Project Details", data));
         return otherInformationSection;
+    }
+
+    private boolean createDirIfNotExist(String path) {
+        File file = new File(path);
+        if (!file.exists() || !file.isDirectory()) {
+            return file.mkdirs();
+        }
+
+        return false;
     }
 }
